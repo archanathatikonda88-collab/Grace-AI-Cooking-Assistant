@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Grace - Cooking Assistant</title>
+  <link rel="stylesheet" href="/static/styles.css?v=26">
+    <!-- small favicon linked to an existing image to avoid default /favicon.ico 404 -->
+    <link rel="icon" href="/static/images/quinoa_salad.jpg" />
+  </head>
+  <body>
+    <div class="chat-app">
+      <!-- Modern Chat Header -->
+      <header class="chat-header">
+        <div class="chat-header-content">
+          <div class="grace-avatar-container">
+            <div class="grace-avatar">👩‍🍳</div>
+            <div class="online-indicator"></div>
+          </div>
+          <div class="chat-header-info">
+            <h1 class="grace-name">Grace</h1>
+            <p class="grace-status">Your personal cooking assistant</p>
+          </div>
+          <div class="header-actions">
+            <button id="voice-toggle" class="voice-toggle-modern" aria-pressed="false" title="Enable voice">🎤</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Typing Indicator (hidden by default) -->
+      <div id="typing-indicator" class="typing-indicator" style="display: none;">
+        <div class="typing-avatar">👩‍🍳</div>
+        <div class="typing-bubble">
+          <span class="typing-text">Grace is typing</span>
+          <div class="typing-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading Animation Overlay -->
+      <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-content">
+          <div class="cooking-animation">
+            <div class="chef-hat">👩‍🍳</div>
+            <div class="cooking-tools">
+              <span class="utensil">🥄</span>
+              <span class="utensil">🍴</span>
+              <span class="utensil">🔪</span>
+            </div>
+          </div>
+          <h3 class="loading-message">Grace is preparing your recipes...</h3>
+          <div class="loading-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modern Chat Messages Area -->
+      <main class="chat-main">
+        <div id="chat" class="chat-messages"></div>
+      </main>
+
+      <!-- Recipe Results Section -->
+      <section class="recipe-section" id="recipe-section" style="display: none;">
+        <div class="recipe-section-header">
+          <h2>Recipe Suggestions</h2>
+        </div>
+        <div id="cards" class="recipe-cards"></div>
+      </section>
+
+      <!-- Chat Input Area -->
+      <div class="chat-input-container">
+        <div id="input-area" class="chat-input-area">
+          <!-- dynamic input will be injected here -->
+        </div>
+      </div>
+
+        <!-- Recipe Detail View - Initially Hidden -->
+        <div id="recipe-detail-view" class="recipe-detail-view" style="display: none;">
+          <div class="detail-header">
+            <button id="back-to-cards" class="back-button">← Back to Recipes</button>
+          </div>
+          <div class="detail-content">
+            <!-- Recipe Image Container -->
+            <div id="detail-image-container" class="detail-image-container">
+              <img id="detail-image" class="detail-hero-image" alt="Recipe Image" />
+            </div>
+            <div class="detail-text">
+              <h1 id="detail-title"></h1>
+              <p id="detail-description" class="detail-description"></p>
+              
+              <div id="detail-ingredients" class="ingredients-section">
+                <h3>Ingredients</h3>
+                <ul id="ingredients-list"></ul>
+              </div>
+              
+              <div id="detail-instructions" class="instructions-section">
+                <h3>Instructions</h3>
+                <ol id="instructions-list"></ol>
+              </div>
+              
+              <!-- Feedback Section -->
+              <div id="recipe-feedback-section" class="feedback-section">
+                <div class="feedback-card">
+                  <h3 class="feedback-heading">We'd love your feedback! 💕</h3>
+                  <p class="feedback-subheading">How was your experience with Grace? 👩‍🍳</p>
+                  
+                  <div class="star-rating-container">
+                    <label class="rating-label">Rate this recipe:</label>
+                    <div class="star-rating" id="star-rating">
+                      <span class="star" data-rating="1">★</span>
+                      <span class="star" data-rating="2">★</span>
+                      <span class="star" data-rating="3">★</span>
+                      <span class="star" data-rating="4">★</span>
+                      <span class="star" data-rating="5">★</span>
+                    </div>
+                  </div>
+                  
+                  <div class="feedback-input-container">
+                    <label for="feedback-text" class="feedback-label">Comments or Email (optional):</label>
+                    <textarea id="feedback-text" class="feedback-textarea" 
+                              placeholder="Tell us what you think, or leave your email for recipe updates..."></textarea>
+                  </div>
+                  
+                  <button id="submit-feedback-btn" class="submit-feedback-btn" disabled>
+                    Submit Feedback
+                  </button>
+                  
+                  <div id="feedback-thank-you" class="feedback-thank-you" style="display: none;">
+                    <h4>Thank you! 👩‍🍳✨</h4>
+                    <p>Grace appreciates your feedback and will use it to improve your cooking experience!</p>
+                  </div>
+                </div>
+              </div>
+              
+              <button id="expand-recipe-btn" class="expand-btn primary" style="display: none;">
+                View full recipe — ingredients & steps
+              </button>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <script src="/static/script.js?v=31"></script>
+  </body>
+  </html>

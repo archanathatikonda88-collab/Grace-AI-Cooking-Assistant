@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recipe Detail Test</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .test-button { margin: 10px; padding: 10px 20px; background: #ff6b35; color: white; border: none; border-radius: 8px; cursor: pointer; }
+        .test-result { margin: 10px 0; padding: 15px; background: #f5f5f5; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <h1>Recipe Detail Test</h1>
+    
+    <button class="test-button" onclick="testSuggestEndpoint()">Test /suggest endpoint</button>
+    <button class="test-button" onclick="testRecipeDetail()">Test /api/recipe/1 endpoint</button>
+    <button class="test-button" onclick="testFullFlow()">Test Full Flow (Suggest → Detail)</button>
+    
+    <div id="results"></div>
+    
+    <script>
+        async function testSuggestEndpoint() {
+            const resultsDiv = document.getElementById('results');
+            
+            try {
+                const response = await fetch('/suggest', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        ingredients: 'chicken,rice',
+                        cuisine: 'indian', 
+                        difficulty: 'easy'
+                    })
+                });
+                
+                const data = await response.json();
+                resultsDiv.innerHTML = `<div class="test-result">
+                    <h3>/suggest endpoint result:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                </div>`;
+            } catch (err) {
+                resultsDiv.innerHTML = `<div class="test-result">Error: ${err.message}</div>`;
+            }
+        }
+        
+        async function testRecipeDetail() {
+            const resultsDiv = document.getElementById('results');
+            
+            try {
+                const response = await fetch('/api/recipe/1');
+                const data = await response.json();
+                resultsDiv.innerHTML = `<div class="test-result">
+                    <h3>/api/recipe/1 endpoint result:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                </div>`;
+            } catch (err) {
+                resultsDiv.innerHTML = `<div class="test-result">Error: ${err.message}</div>`;
+            }
+        }
+        
+        async function testFullFlow() {
+            const resultsDiv = document.getElementById('results');
+            let output = '<div class="test-result"><h3>Full Flow Test:</h3>';
+            
+            try {
+                // Step 1: Get suggestions
+                output += '<p><strong>Step 1: Getting suggestions...</strong></p>';
+                const suggestResponse = await fetch('/suggest', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        ingredients: 'chicken,rice',
+                        cuisine: 'indian', 
+                        difficulty: 'easy'
+                    })
+                });
+                
+                const suggestData = await suggestResponse.json();
+                output += `<p>✅ Got ${suggestData.cards.length} recipe cards</p>`;
+                
+                if (suggestData.cards.length > 0) {
+                    const firstCard = suggestData.cards[0];
+                    output += `<p>First card: ${firstCard.name} (ID: ${firstCard.id})</p>`;
+                    
+                    // Step 2: Get full details
+                    output += '<p><strong>Step 2: Getting full recipe details...</strong></p>';
+                    const detailResponse = await fetch(`/api/recipe/${firstCard.id}`);
+                    const detailData = await detailResponse.json();
+                    
+                    output += `<p>✅ Got full details for: ${detailData.name}</p>`;
+                    output += `<p>Ingredients count: ${detailData.ingredients ? detailData.ingredients.length : 0}</p>`;
+                    output += `<p>Instructions type: ${typeof detailData.instructions}</p>`;
+                    output += `<p>Instructions length: ${detailData.instructions ? detailData.instructions.length : 0}</p>`;
+                    
+                    output += '<p><strong>Card Data vs Detail Data Comparison:</strong></p>';
+                    output += `<p>Card has ingredients: ${!!firstCard.ingredients}</p>`;
+                    output += `<p>Detail has ingredients: ${!!detailData.ingredients}</p>`;
+                    output += `<p>Card has instructions: ${!!firstCard.instructions}</p>`;
+                    output += `<p>Detail has instructions: ${!!detailData.instructions}</p>`;
+                }
+                
+                output += '</div>';
+                resultsDiv.innerHTML = output;
+            } catch (err) {
+                resultsDiv.innerHTML = `<div class="test-result">Error: ${err.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>
