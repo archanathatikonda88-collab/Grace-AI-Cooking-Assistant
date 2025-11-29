@@ -1756,6 +1756,36 @@ def recipe_feedback():
         return jsonify({'status': 'error', 'message': 'Failed to save feedback'}), 500
 
 
+@app.route('/api/list-images')
+def list_images():
+    """List all available images in the static/images directory"""
+    try:
+        images_dir = os.path.join('static', 'images')
+        if os.path.exists(images_dir):
+            images = [f for f in os.listdir(images_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp'))]
+            images.sort()  # Sort alphabetically for consistent ordering
+            return jsonify({
+                'status': 'success',
+                'images': images,
+                'count': len(images)
+            })
+        else:
+            return jsonify({
+                'status': 'error',
+                'message': 'Images directory not found',
+                'images': [],
+                'count': 0
+            })
+    except Exception as e:
+        print(f'Error listing images: {e}')
+        return jsonify({
+            'status': 'error',
+            'message': f'Failed to list images: {str(e)}',
+            'images': [],
+            'count': 0
+        }), 500
+
+
 if __name__ == '__main__':
     # Get port from environment variable (Cloud Run uses PORT)
     port = int(os.environ.get('PORT', 8000))
